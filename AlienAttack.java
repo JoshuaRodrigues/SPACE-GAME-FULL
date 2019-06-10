@@ -95,7 +95,7 @@ public class AlienAttack extends JPanel implements KeyListener, Runnable
     
     //Draws each of the aliens on the screen
     for(int d =0;d<aliens.size();d++){//loops through the aliens
-      (aliens.get(d)).draw(g);//draes the aliens
+      (aliens.get(d)).draw(g);//draws the aliens
     }
     
     //Sets the font of the text
@@ -121,23 +121,23 @@ public class AlienAttack extends JPanel implements KeyListener, Runnable
     
     //Starts the game if ENTER is pressed (can only be done once)
     if(e.getKeyCode() == KeyEvent.VK_ENTER && timesActive == 0){
-      shipActive = true;
+      shipActive = true;//activates the ship
       timesActive++;
     }
     
     if(shipActive){  
       //Changes the ship's acceleration based on the arrow keys pressed.
       if(e.getKeyCode() == KeyEvent.VK_DOWN){
-        downAccel = true;
+        downAccel = true;//accelerates down
       }
       else if(e.getKeyCode() == KeyEvent.VK_UP){
-        upAccel = true;
+        upAccel = true;//accelerates up
       }
       else if(e.getKeyCode() == KeyEvent.VK_LEFT){
-        leftAccel = true;
+        leftAccel = true;//accelerates left
       }
       else if(e.getKeyCode() == KeyEvent.VK_RIGHT){
-        rightAccel = true;
+        rightAccel = true;//accelerates right
       }
       
       //Turns the turret anti-clockwise if A is pressed
@@ -158,13 +158,10 @@ public class AlienAttack extends JPanel implements KeyListener, Runnable
       
       //Adds shots to the shot array if SPACE is pressed
       else if(e.getKeyCode() == KeyEvent.VK_SPACE){
-        if(shots.size()<7){
-          shots.add(new Shot((int)x, (int)y, direction));
+        if(shots.size()<7){//only allows 6 shots on the screen at once
+          shots.add(new Shot((int)x, (int)y, direction));//adds a shot
         }
       }
-      /*else if(e.getKeyCode() == KeyEvent.VK_P){
-       aliens.add(new Alien((int)x, (int) y));
-       }*/
     }
   }
   
@@ -220,17 +217,17 @@ public class AlienAttack extends JPanel implements KeyListener, Runnable
   }
   
   public void keyReleased(KeyEvent e){
-    if(e.getKeyCode() == KeyEvent.VK_UP){
-      upAccel = false;
+    if(e.getKeyCode() == KeyEvent.VK_UP){//if up key is released
+      upAccel = false;//up acceleration stops
     }
-    else if(e.getKeyCode() == KeyEvent.VK_DOWN){
-      downAccel = false;
+    else if(e.getKeyCode() == KeyEvent.VK_DOWN){//if down key is released
+      downAccel = false;//down acceleration stops
     }
-    else if(e.getKeyCode() == KeyEvent.VK_LEFT){
-      leftAccel = false;
+    else if(e.getKeyCode() == KeyEvent.VK_LEFT){//if left key is released
+      leftAccel = false;//left acceleration stops
     }
-    else if(e.getKeyCode() == KeyEvent.VK_RIGHT){
-      rightAccel = false;
+    else if(e.getKeyCode() == KeyEvent.VK_RIGHT){//if right key is released
+      rightAccel = false;//right acceleration stops
     }
   }
   
@@ -238,35 +235,37 @@ public class AlienAttack extends JPanel implements KeyListener, Runnable
     
   }
   
+  //Moves the ship
   public void moveShip(){
-    if(!upAccel && !downAccel){
-      yVel *= FRICTION;
+    if(!upAccel && !downAccel){//if accel in y is 0
+      yVel *= FRICTION;//y speed is reduced by friction
     }
-    if(!leftAccel && !rightAccel){
-      xVel *= FRICTION;
+    if(!leftAccel && !rightAccel){//if accel in x is 0
+      xVel *= FRICTION;//x speed is reduced by friction
     }
-    if(Math.abs(yVel)<3){
+    if(Math.abs(yVel)<3){//sets a max speed of 3 in x
       if(upAccel){
-        yVel -= SPEED;
+        yVel -= SPEED;//increases the speed up
       }
       if(downAccel){
-        yVel += SPEED;
+        yVel += SPEED;//increases the speed down
       }
     }
-    if(Math.abs(xVel)<3){
+    if(Math.abs(xVel)<3){//sets a max speed of 3 in y
       if(leftAccel){
-        xVel -= SPEED;
+        xVel -= SPEED;//increases the speed left
       }
       if(rightAccel){
-        xVel += SPEED;
+        xVel += SPEED;//increases the speed right
       }
     }
-    if(shipActive){
+    if(shipActive){//changes location of ship if it is active
       x += xVel;
       y += yVel;
     }
   }
   
+  //checks if the ship and wall collide
   public void checkCollisionShipWall(){
     if(direction == 1 || direction ==3){
       if(direction == 1){
@@ -297,22 +296,22 @@ public class AlienAttack extends JPanel implements KeyListener, Runnable
         if(x<=0){
           x=729; 
         }
-        if(x>=730){
+        if(x>=730){//collision with 
           x = 1;
         }
       }
       else{
-        if(x<=20){
+        if(x<=20){//collision with west wall
           x=749; 
         }
-        if(x>=750){
+        if(x>=750){//collision with east wall
           x = 21 ;
         }
       }
-      if(y<=0){
+      if(y<=0){//collision with north wall
         y=749;
       }
-      if(y>=750){
+      if(y>=750){//collision with south wall
         y = 1;
       }
     }
