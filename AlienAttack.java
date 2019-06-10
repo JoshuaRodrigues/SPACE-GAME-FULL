@@ -267,40 +267,40 @@ public class AlienAttack extends JPanel implements KeyListener, Runnable
   
   //checks if the ship and wall collide
   public void checkCollisionShipWall(){
-    if(direction == 1 || direction ==3){
-      if(direction == 1){
-        if(y<=20){
+    if(direction == 1 || direction ==3){//if turret is pointing up or down
+      if(direction == 1){//if it is pointing up
+        if(y<=20){//collision with north wall
           y=749;
         }
-        if(y>=800){
+        if(y>=800){//collision with south wall
           y=21;
         }
       }
-      else{
-        if(y<=0){
+      else{//if turret is pointing down
+        if(y<=0){//collision with north wall
           y=729;
         }
-        if(y>=730){
+        if(y>=730){//collision with south wall
           y = 1;
         }
       }
-      if(x<=0){
+      if(x<=0){//collision with east wall (behaviour in x is the same if turret is pointing up or down)
         x=749; 
       }
-      if(x>=750){
+      if(x>=750){//collision with west wall
         x = 1;
       }
     }
-    else{
-      if(direction == 2){
-        if(x<=0){
+    else{//if turret is pointing left or right
+      if(direction == 2){//if turret is pointing right
+        if(x<=0){//collision with west wall
           x=729; 
         }
-        if(x>=730){//collision with 
+        if(x>=730){//collision with east wall
           x = 1;
         }
       }
-      else{
+      else{//if turret is pointing left
         if(x<=20){//collision with west wall
           x=749; 
         }
@@ -317,34 +317,36 @@ public class AlienAttack extends JPanel implements KeyListener, Runnable
     }
   }
   
+  //checks if alien hits ship
   public void checkCollisionAlienShip(){
-    for(int g =0;g<aliens.size();g++){
-      if((aliens.get(g)).shipCollision((int)x, (int)y)){
-        shipActive = false;
+    for(int g =0;g<aliens.size();g++){//loops through the aliens
+      if((aliens.get(g)).shipCollision((int)x, (int)y)){//if alien hits ship
+        shipActive = false;//disables ship
       }
     }
   }
   
+  //checks if shot hits alien
   public void checkCollisionAlienShot(){
-    for(int f=0;f<shots.size() && f>= 0;f++){
-      for(int g=0;g<aliens.size() && g>=0;g++){
+    for(int f=0;f<shots.size() && f>= 0;f++){//loops through shots
+      for(int g=0;g<aliens.size() && g>=0;g++){//loops through aliens
         if(shots.size()>0 && aliens.size()>0){
-          if(((aliens.get(g)).getDistanceToBullet((shots.get(f)).getX(), (shots.get(f)).getY()))<=20){
-            aliens.remove(g);
+          if(((aliens.get(g)).getDistanceToBullet((shots.get(f)).getX(), (shots.get(f)).getY()))<=20){//if they collide
+            aliens.remove(g);//remove the alien
             g--;
-            shots.remove(f);
+            shots.remove(f);//remove the shot
             f--;
-            //(aliens.get(g)).explosion(Graphics g);
           }
         }
       }
     }
   }
   
+  //checks if shot hits wall
   public void checkCollisionShotWall(){
-    for(int c=0;c<shots.size() && c>=0;c++){
-      if((shots.get(c)).getX()<=10 || (shots.get(c)).getX()>=790 || (shots.get(c)).getY()<=10 || (shots.get(c)).getY()>=790){
-        shots.remove(c);
+    for(int c=0;c<shots.size() && c>=0;c++){//loops through shots
+      if((shots.get(c)).getX()<=10 || (shots.get(c)).getX()>=790 || (shots.get(c)).getY()<=10 || (shots.get(c)).getY()>=790){//if it hits wall
+        shots.remove(c);//remove the shot
         c--;
       }
     }
