@@ -1,3 +1,4 @@
+//importing java packages
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.event.KeyEvent;
@@ -8,73 +9,57 @@ import java.lang.*;
 
 public class AlienAttack extends JPanel implements KeyListener, Runnable
 {
-  private final int HEIGHT = 800; private final int WIDTH = 800;
-  double xVel; double yVel; final double SPEED = 0.02;
-  Thread thread;
-  JLabel levelLabel;
-  int direction;
-  double x, y;
-  final double FRICTION = 0.98;
-  boolean upAccel, downAccel, leftAccel, rightAccel;
-  ArrayList<Shot> shots;
-  ArrayList<Alien> aliens;
-  boolean shipActive;
-  int level;
-  Font font1;
-  String levelAsString;
+  private final int HEIGHT = 800; private final int WIDTH = 800;//sets the bounds of the frame
+  double xVel; double yVel; final double SPEED = 0.02;//variables for the speed of the ship
+  Thread thread;//the thread
+  int direction;//the direction of the turret
+  double x, y;//variables for the location of the ship
+  final double FRICTION = 0.98;//friction coefficient for the ship's movement
+  boolean upAccel, downAccel, leftAccel, rightAccel;//booleans for the ship's acceleration
+  ArrayList<Shot> shots;//array of shots
+  ArrayList<Alien> aliens;//array of aliens
+  boolean shipActive;//boolean for whether ship is active or not
+  int level;//the level in the game
+  Font font1;//font of the text
+  String levelAsString;//the level but converted to a string
   int timesActive;
   boolean gameOver;
   
+  //constructor
   public AlienAttack(){
-    x=375;
-    y=375;
-    font1 = new Font("Times New Roman", Font.BOLD, 50);
-    level = 1;
+    x=375;//initial location of ship
+    y=375;//initial location of ship
+    font1 = new Font("Times New Roman", Font.BOLD, 50);//sets the font
+    level = 1;//starts at level 1
     gameOver = false;
-    levelAsString = String.valueOf(level);
-    direction = 1;
+    levelAsString = String.valueOf(level);//converts the level to a string
+    direction = 1;//turret starts off facing north
 
-    xVel = 0; yVel = 0;
-    shipActive = false;
+    xVel = 0; yVel = 0;//sets ship as initially stationary
+    shipActive = false;//ship is inactive
     timesActive = 0;
-    upAccel = false; downAccel = false; leftAccel = false; rightAccel = false;
-    shots = new ArrayList<Shot>();
-    aliens = new ArrayList<Alien>();
-    setFocusable(true);
-    addKeyListener(this);
+    upAccel = false; downAccel = false; leftAccel = false; rightAccel = false;//set acceleration to none
+    shots = new ArrayList<Shot>();//completes the initialization of shot array
+    aliens = new ArrayList<Alien>();//completes the initialization of alien array
+    setFocusable(true);//the window does not have to be clicked on in order to play the game
+    addKeyListener(this);//adds a key listening interface to the panel
     thread = new Thread(this);
-    thread.start();
+    thread.start();//starts the thread
   } 
   
+  //paints the graphics onto the frame
   public void paint(Graphics g){
-    
-    //DRAWS AN OVAL AND STUFF
-    /*g.setColor(Color.BLUE);
-     g.drawOval(100, 50, 300, 400);
-     g.fillOval(175, 150, 30, 30);
-     g.fillOval(295, 150, 30, 30);
-     g.setColor(Color.RED);
-     g.fillRect(230, 220, 40, 40);*/
-    
-    
-    //DRAWS A STAR
-    /*int[] xPoints = {50, 80, 90, 100, 150, 150, 200, 210, 220, 250};
-     int[] yPoints = {150, 400, 200, 150, 50, 350, 150, 200, 400, 150};
-     g.setColor(Color.BLACK);
-     g.fillPolygon(xPoints, yPoints, 10);*/
-    
-    //System.out.println("("+(int)x+","+(int)y+")");
     //Sets the background (black)
-    g.setColor(Color.BLACK);
-    g.fillRect(0, 0, WIDTH, HEIGHT);
+    g.setColor(Color.BLACK);//sets colour to black
+    g.fillRect(0, 0, WIDTH, HEIGHT);//fills the screen as the background
     
     //Draws the ship on the screen
-    g.setColor(Color.BLUE);
-    g.fillRect((int)x, (int)y, 50, 50);
+    g.setColor(Color.BLUE);//sets the colour as blue
+    g.fillRect((int)x, (int)y, 50, 50);//draws the ship, size is 50 by 50
     
     //Draws the turret on the screen
-    g.setColor(Color.GRAY);
-    switch(direction){
+    g.setColor(Color.GRAY);//sets colour to grey
+    switch(direction){//location of the turret changes depending on the direction of the ship
       case 1: g.fillRect((int)x+18, (int)y-20, 14, 10); g.fillRect((int) x+20,(int) y-20, 10, 20); break;
       case 2: g.fillRect((int)x+60, (int)y+18, 10, 14); g.fillRect((int) x+50,(int) y+20, 20, 10); break;
       case 3: g.fillRect((int)x+18, (int)y+60, 14, 10); g.fillRect((int) x+20,(int) y+50, 10, 20); break;
@@ -83,18 +68,19 @@ public class AlienAttack extends JPanel implements KeyListener, Runnable
     
     //Draws the detail on the ship
     if(shipActive == true){
-      g.setColor(Color.CYAN);
+      g.setColor(Color.CYAN);//sets colour to cyan if the ship is active
     }
-    else {g.setColor(Color.RED);}
-    switch(direction){
+    else {g.setColor(Color.RED);}//sets colour to red if the ship is inactive
+    switch(direction){//location of the ship hub changes depending on the direction of the ship
       case 1: g.fillOval((int)x+18, (int)y+5, 14, 20); break;
       case 2: g.fillOval((int)x+25, (int)y+18, 20, 14); break;
       case 3: g.fillOval((int)x+18, (int)y+25, 14, 20); break;
       case 4: g.fillOval((int)x+5, (int)y+18, 20, 14); break;
     }
     
-    g.setColor(Color.GRAY);
-    switch(direction){
+    //draws the grey detail on the ship
+    g.setColor(Color.GRAY);//sets colour to grey
+    switch(direction){//location of the detail changes depending on the direction of the ship
       case 1: g.fillOval((int)x+14, (int)y+10, 3, 10); g.fillOval((int)x+33, (int)y+10, 3, 10); break;
       case 2: g.fillOval((int)x+30, (int)y+14, 10, 3); g.fillOval((int)x+30, (int)y+33, 10, 3); break;
       case 3: g.fillOval((int)x+14, (int)y+30, 3, 10); g.fillOval((int)x+33, (int)y+30, 3, 10); break;
@@ -102,25 +88,24 @@ public class AlienAttack extends JPanel implements KeyListener, Runnable
     }
     
     //Draws the shots fired on the screen
-    g.setColor(Color.YELLOW);
-    for(int a =0;a<shots.size();a++){
-      (shots.get(a)).draw(g);
+    g.setColor(Color.YELLOW);//sets colour to yellow
+    for(int a =0;a<shots.size();a++){//loops throught the shots
+      (shots.get(a)).draw(g);//draws the shots
     }
     
     //Draws each of the aliens on the screen
-    
-    for(int d =0;d<aliens.size();d++){
-      (aliens.get(d)).draw(g);
+    for(int d =0;d<aliens.size();d++){//loops through the aliens
+      (aliens.get(d)).draw(g);//draes the aliens
     }
     
     //Sets the font of the text
     g.setFont(font1);
     
     //Prints "PRESS ENTER TO START" in the center of the screen
-    g.setColor(Color.WHITE);
+    g.setColor(Color.WHITE);//sets the colour to white
     font1 = new Font("Times New Roman", Font.BOLD, 20);
     if(timesActive == 0){
-      g.drawString("PRESS ENTER TO START", 275, 300);
+      g.drawString("PRESS ENTER TO START", 275, 300);//prints out PRESS ENTER TO START to the sentre of the screen
     }
     
     //Prints the level in the top right hand side of the screen
@@ -128,7 +113,7 @@ public class AlienAttack extends JPanel implements KeyListener, Runnable
     
     //Prints "GAMEOVER" on the screen if it is game over
     if(gameOver){
-      g.drawString("GAME OVER", 325, 375);
+      g.drawString("GAME OVER", 325, 375);//draws the GAME OVER text
     }
   }
   
