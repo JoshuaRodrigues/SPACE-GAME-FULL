@@ -366,12 +366,11 @@ public class AlienAttack extends JPanel implements KeyListener, Runnable
     }
   }
   
+  //goes to the next level and adds aliens
   public void levelUp(){
     for(int h = 0;h<level; h++){
-      aliens.add(new Alien((int)x, (int) y));
+      aliens.add(new Alien((int)x, (int) y));//adds as many aliens as the level
     }
     level++;
   }
-  
-  //public void
 }
