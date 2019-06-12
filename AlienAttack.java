@@ -111,18 +111,24 @@ public class AlienAttack extends JPanel implements KeyListener, Runnable
     //Prints the level in the top right hand side of the screen
     g.drawString("LEVEL: "+levelAsString, 675, 20);
     
-    //Prints "GAMEOVER" on the screen if it is game over
+    //Prints the endgame message on the screen on the screen if it is game over
     if(gameOver){
       g.drawString("GAME OVER", 325, 375);//draws the GAME OVER text
+      g.drawString"PRESS ENTER TO START AGAIN", 250, 425);
     }
   }
   
   public void keyPressed(KeyEvent e){
     
     //Starts the game if ENTER is pressed (can only be done once)
-    if(e.getKeyCode() == KeyEvent.VK_ENTER && timesActive == 0){
-      shipActive = true;//activates the ship
-      timesActive++;
+    if(e.getKeyCode() == KeyEvent.VK_ENTER){
+      if(timesActive == 0){
+        shipActive = true;//activates the ship
+        timesActive++;
+      }
+      if(gameOver){
+        new SpaceGame();
+      }
     }
     
     if(shipActive){  
@@ -330,7 +336,7 @@ public class AlienAttack extends JPanel implements KeyListener, Runnable
   public void checkCollisionAlienShot(){
     for(int f=0;f<shots.size() && f>= 0;f++){//loops through shots
       for(int g=0;g<aliens.size() && g>=0;g++){//loops through aliens
-        if(shots.size()>0 && aliens.size()>0){
+        if(shots.size()>0 && aliens.size()>0 && f>-1 && g>-1){
           if(((aliens.get(g)).getDistanceToBullet((shots.get(f)).getX(), (shots.get(f)).getY()))<=20){//if they collide
             aliens.remove(g);//remove the alien
             g--;
